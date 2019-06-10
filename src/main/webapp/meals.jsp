@@ -30,7 +30,7 @@
     </tr>
 
 <c:forEach var="mealTo" items="${mealsToList}">
-        <tr align="center" style="color:${mealTo.isExcess() ? 'red' : 'green'}">
+        <tr align="center" style="color:${mealTo.isExcss() ? 'red' : 'green'}">
             <td>
                 <fmt:parseDate value="${mealTo.getDateTime()}" pattern="yyyy-MM-dd'T'HH:mm" type="both" var="parsedDateTime"/>
                 <fmt:formatDate value="${parsedDateTime}" pattern="yyyy-MM-dd hh:mm"/>
