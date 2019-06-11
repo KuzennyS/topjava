@@ -22,6 +22,8 @@
     <title>Insert title here</title>
 </head>
 <body>
-<jsp:forward page="/meals?action=listMeal" />
+<a href="users">Users</a></td>
+<p></p>
+<a href="meals?action=listMeal">Meals</a></td>
 </body>
 </html>

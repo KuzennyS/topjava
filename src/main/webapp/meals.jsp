@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 
@@ -30,35 +30,20 @@
     </tr>
 
 <c:forEach var="mealTo" items="${mealsToList}">
-        <tr align="center" style="color:${mealTo.isExcss() ? 'red' : 'green'}">
+        <tr align="center" style="color:${mealTo.isExcess() ? 'red' : 'green'}">
             <td>
                 <fmt:parseDate value="${mealTo.getDateTime()}" pattern="yyyy-MM-dd'T'HH:mm" type="both" var="parsedDateTime"/>
-                <fmt:formatDate value="${parsedDateTime}" pattern="yyyy-MM-dd hh:mm"/>
+                <fmt:formatDate value="${parsedDateTime}" pattern="yyyy-MM-dd HH:mm"/>
             </td>
             <td>${mealTo.getDescription()}</td>
             <td>${mealTo.getCalories()}</td>
-            <td>
-                <form action = "updateMeal.jsp" method="post">
-                    <input type="hidden" name="id" value="${user.getId()}">
-                    <input type="hidden" name="name" value="${user.getName()}">
-                    <input type="hidden" name="age" value="${user.getAge()}">
-                    <input type="submit" value="Изменить">
-                </form>
-            </td>
-            <td>
-                <form action="deleteMeal.jsp" method="post">
-                    <input type="hidden" name="id" value="${mealTo.getId()}">
-                    <input type="submit" value="Удалить">
-                </form>
-            </td>
+            <td><a href="meals?action=edit&userId=<c:out value="${mealTo.getId()}"/>">Update</a></td>
+            <td><a href="meals?action=delete&userId=<c:out value="${mealTo.getId()}"/>">Delete</a></td>
         </tr>
     </c:forEach>
 </table>
 
 <p></p>
-<%--<form action="addMeal.jsp">--%>
-<%--    <input type="submit" value="Добавить прием пищи">--%>
-<%--</form>--%>
-<a href="addMeal.jsp">Добавить прием пищи</a>
+<p><a href="meals?action=insert">Add Meal</a></p>
 </body>
 </html>
