@@ -35,10 +35,10 @@
                 <fmt:parseDate value="${mealTo.getDateTime()}" pattern="yyyy-MM-dd'T'HH:mm" type="both" var="parsedDateTime"/>
                 <fmt:formatDate value="${parsedDateTime}" pattern="yyyy-MM-dd HH:mm"/>
             </td>
-            <td>${mealTo.getDescription()}</td>
+            <td>${mealTo.getDescriptionMt()}</td>
             <td>${mealTo.getCalories()}</td>
-            <td><a href="meals?action=edit&userId=<c:out value="${mealTo.getId()}"/>">Update</a></td>
-            <td><a href="meals?action=delete&userId=<c:out value="${mealTo.getId()}"/>">Delete</a></td>
+            <td><a href="meals?action=edit&mealId=<c:out value="${mealTo.getId()}"/>">Update</a></td>
+            <td><a href="meals?action=delete&mealId=<c:out value="${mealTo.getId()}"/>">Delete</a></td>
         </tr>
     </c:forEach>
 </table>

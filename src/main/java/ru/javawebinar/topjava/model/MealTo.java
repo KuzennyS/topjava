@@ -13,6 +13,22 @@ public class MealTo {
 
     private int id;
 
+    public MealTo(int id, LocalDateTime dateTime, String description, int calories, boolean excess) {
+        this.id = id;
+        this.dateTime = dateTime;
+        this.description = description;
+        this.calories = calories;
+        this.excess = excess;
+    }
+
+    public MealTo(int id, Meal meal, boolean excess) {
+        this.id = id;
+        this.dateTime = meal.getDateTime();
+        this.description = meal.getDescription();
+        this.calories = meal.getCalories();
+        this.excess = excess;
+    }
+
     public int getId() {
         return id;
     }
@@ -21,19 +37,11 @@ public class MealTo {
         this.id = id;
     }
 
-    public MealTo(LocalDateTime dateTime, String description, int calories, boolean excess, int id) {
-        this.id = id;
-        this.dateTime = dateTime;
-        this.description = description;
-        this.calories = calories;
-        this.excess = excess;
-    }
-
     public LocalDateTime getDateTime() {
         return dateTime;
     }
 
-    public String getDescription() {
+    public String getDescriptionMt() {
         return description;
     }
 

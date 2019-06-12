@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -8,17 +8,19 @@
 </head>
 <body>
 <form method="POST" action='meals' name="frmAddMeal">
-    Meal ID : <input type="text" readonly="readonly" name="mealId"
-                     value="<c:out value="${meal.getId()}" />"/> <br/>
+
+    <input type="hidden" name="idMeal" value=<%= request.getParameter("mealId") %>/>
     <p></p>
-    Time meal : <input type="text" name="timeMeal"/>
-<%--        <fmt:parseDate value="${meal.timeMeal}" pattern="yyyy-MM-dd'T'HH:mm" type="both" var="parsedDateTime"/>--%>
-<%--&lt;%&ndash;    <fmt:formatDate value="${parsedDateTime}" pattern="yyyy-MM-dd hh:mm"/>/> <br />&ndash;%&gt;--%>
-<%--                       value="<fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${parsedDateTime}" />"/> <br/>--%>
+
+    Time meal : <input type="text" name="timeMeal"
+        <fmt:parseDate value="${meal.getDateTime()}" pattern="yyyy-MM-dd'T'HH:mm" type="both" var="parsedDateTime"/>
+                       value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parsedDateTime}" />"/> <br/>
     <p></p>
+
     Description : <input type="text" name="description"
                          value="<c:out value="${meal.description}" />"/> <br/>
     <p></p>
+
     Calories : <input type="text" name="calories"
                       value="<c:out value="${meal.calories}" />"/> <br/>
     <p></p>
