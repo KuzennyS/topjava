@@ -17,6 +17,24 @@
     </style>
 </head>
 <body>
+<form method="post" action="meals">
+    <dl>
+        <dt>От даты:</dt>
+        <dd><input type="date" value="${meal.dateTime}" name="dateStart" required></dd>
+
+        <dt>До даты:</dt>
+        <dd><input type="date" value="${meal.dateTime}" name="dateEnd" required></dd>
+
+        <dt>От времени:</dt>
+        <dd><input type="time" value="${meal.dateTime}" name="timeStart" required></dd>
+
+        <dt>До времени:</dt>
+        <dd><input type="time" value="${meal.dateTime}" name="timeEnd" required></dd>
+    </dl>
+    <button type="submit">Фильтровать</button>
+    <button onclick='window.location.href="meals"' type="button">Отменить</button>
+</form>
+
 <section>
     <h3><a href="index.html">Home</a></h3>
     <hr/>
@@ -34,7 +52,7 @@
         </tr>
         </thead>
         <c:forEach items="${meals}" var="meal">
-            <jsp:useBean id="meal" type="ru.javawebinar.topjava.TO.MealTo"/>
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
             <tr class="${meal.excess ? 'excess' : 'normal'}">
                 <td>
                         <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>

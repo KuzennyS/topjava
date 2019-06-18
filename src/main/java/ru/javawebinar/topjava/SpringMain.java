@@ -2,7 +2,6 @@ package ru.javawebinar.topjava;
 
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import ru.javawebinar.topjava.TO.MealTo;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -25,8 +24,8 @@ public class SpringMain {
         try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
-            mealRestController.getAll();
-            mealRestController.save(new Meal(null, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "lunch", 666, 1));
+            mealRestController.getAllbyUser();
+            mealRestController.create(new Meal(null, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "lunch", 666),2);
         }
     }
 }

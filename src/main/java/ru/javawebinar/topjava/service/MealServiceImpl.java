@@ -2,51 +2,60 @@ package ru.javawebinar.topjava.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.javawebinar.topjava.TO.MealTo;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class MealServiceImpl implements MealService {
 
-    @Autowired
-    private MealRepository repositoryMeal;
+    private final MealRepository repositoryMeal;
 
-    @Override
-    public Meal save(Meal meal) {
-        return checkNotFoundWithId(repositoryMeal.save(meal), meal.getId());
+    @Autowired
+    public MealServiceImpl(MealRepository repositoryMeal) {
+        this.repositoryMeal = repositoryMeal;
     }
 
     @Override
-    public void delete(int id, int userId) throws NotFoundException {
+    public Meal create(Meal meal, Integer userId) {
+        return checkNotFoundWithId(repositoryMeal.save(meal, userId), meal.getId());
+    }
+
+    @Override
+    public void delete(int id, Integer userId) throws NotFoundException {
         checkNotFoundWithId(repositoryMeal.delete(id, userId), id);
     }
 
     @Override
-    public Meal get(int id, int userId) throws NotFoundException {
+    public Meal get(int id, Integer userId) throws NotFoundException {
         return checkNotFoundWithId(repositoryMeal.get(id, userId), id);
     }
 
     @Override
-    public List<MealTo> getAll() {
-        return repositoryMeal.getAll();
+    public List<MealTo> getAllbyUser(Integer userId) {
+        return MealsUtil.getWithExcess(repositoryMeal.getAllbyUser(userId), MealsUtil.DEFAULT_CALORIES_PER_DAY).stream()
+                .sorted(Comparator.comparing(MealTo::getDateTime).reversed()).collect(Collectors.toList());
     }
 
     @Override
-    public List<MealTo> getAllbyUser(int userId) {
-        return checkNotFoundWithId(repositoryMeal.getAllbyUser(userId), userId);
+    public void update(Meal meal, Integer userId) {
+        checkNotFoundWithId(repositoryMeal.save(meal, userId), meal.getId());
     }
 
     @Override
-    public List<MealTo> getFilterDT(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
-        return repositoryMeal.getFilterDT(startDate, startTime, endDate, endTime);
+    public List<MealTo> getFilterDT(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, Integer userId) {
+        return MealsUtil.getWithExcess(
+                repositoryMeal.getFilterDT(startDate, startTime, endDate, endTime, userId),MealsUtil.DEFAULT_CALORIES_PER_DAY);
+
     }
 }
