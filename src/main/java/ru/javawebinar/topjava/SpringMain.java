@@ -25,7 +25,7 @@ public class SpringMain {
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
             mealRestController.getAllbyUser();
-            mealRestController.create(new Meal(null, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "lunch", 666),2);
+            mealRestController.create(new Meal(null, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "lunch", 666));
         }
     }
 }

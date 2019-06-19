@@ -13,6 +13,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.*;
+
 @Controller
 public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -22,8 +24,8 @@ public class MealRestController {
 
     public List<MealTo> getAllbyUser() {
         log.info("getAllbyUser");
-        return service.getAllbyUser(SecurityUtil.authUserId());// return meal for user with id
-    }
+        return service.getAllbyUser(SecurityUtil.authUserId());
+}
 
     public List<MealTo> getFilterDT(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         log.info("getFilterDT");
@@ -35,12 +37,16 @@ public class MealRestController {
         return service.get(id, SecurityUtil.authUserId());
     }
 
-    public Meal create(Meal meal, Integer userId) {
-        return service.create(meal, userId);
+    public Meal create(Meal meal) {
+        log.info("create {}", meal);
+//        checkNew(meal);
+        return service.create(meal, SecurityUtil.authUserId());
     }
 
-    public Meal update(Meal meal, Integer userId) {
-        return service.create(meal, userId);
+    public Meal update(Meal meal) {
+        log.info("update {} with userId={}", meal, SecurityUtil.authUserId());
+        assureIdConsistent(meal, SecurityUtil.authUserId());
+        return service.create(meal, SecurityUtil.authUserId());
     }
 
     public void delete(int id) {

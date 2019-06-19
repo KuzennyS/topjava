@@ -29,11 +29,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     @Override
     public Meal save(Meal meal, Integer userId) {
         Map<Integer, Meal> repository;
-        if (repositoryG.get(userId) != null) {
-            repository = repositoryG.get(userId);
-        } else {
-            repository = new ConcurrentHashMap<>();
-        }
+        repository = repositoryG.get(userId) != null ? repositoryG.get(userId) : new ConcurrentHashMap<>();
+//        repositoryG.computeIfAbsent(userId, k -> new ConcurrentHashMap<>()).put(meal.getId(), meal);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);
@@ -48,19 +45,24 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public boolean delete(int id, Integer userId) {
-        if (repositoryG.get(userId) == null || repositoryG.get(userId).get(id) == null) return false;
-        return repositoryG.get(userId).remove(id) != null;
+        Map<Integer, Meal> repository = repositoryG.get(userId);
+        if (repository == null) return false;
+        return repository.remove(id) != null;
     }
 
     @Override
     public Meal get(int id, Integer userId) {
-        if (repositoryG.get(userId) == null || repositoryG.get(userId).get(id) == null) return null;
-        return repositoryG.get(userId).get(id);
+        Map<Integer, Meal> repository = repositoryG.get(userId);
+        if (repository == null) return null;
+        return repository.get(id);
     }
 
     @Override
     public List<Meal> getAllbyUser(Integer userId) {
-        return new ArrayList<>(repositoryG.get(userId).values());
+        Map<Integer, Meal> repository = repositoryG.get(userId);
+        if (repository == null) return new ArrayList<>();
+        return repository.values().stream()
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
     }
 
     @Override
@@ -68,8 +70,6 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         return repositoryG.get(userId).values().stream()
                 .filter(meal -> DateTimeUtil.isBetweenDate(
                         meal.getDateTime().toLocalDate(), startDate, endDate))
-                .filter(meal -> DateTimeUtil.isBetweenDate(
-                        meal.getDateTime().toLocalTime(), startTime, endTime))
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
     }
 }

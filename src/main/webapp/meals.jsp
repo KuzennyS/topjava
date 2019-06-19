@@ -17,19 +17,19 @@
     </style>
 </head>
 <body>
-<form method="post" action="meals">
+<form method="post" action="meals?action=filterDT">
     <dl>
         <dt>От даты:</dt>
-        <dd><input type="date" value="${meal.dateTime}" name="dateStart" required></dd>
+        <dd><input type="date" value="${meal.dateTime}" name="dateStart"></dd>
 
         <dt>До даты:</dt>
-        <dd><input type="date" value="${meal.dateTime}" name="dateEnd" required></dd>
+        <dd><input type="date" value="${meal.dateTime}" name="dateEnd"></dd>
 
         <dt>От времени:</dt>
-        <dd><input type="time" value="${meal.dateTime}" name="timeStart" required></dd>
+        <dd><input type="time" value="${meal.dateTime}" name="timeStart"></dd>
 
         <dt>До времени:</dt>
-        <dd><input type="time" value="${meal.dateTime}" name="timeEnd" required></dd>
+        <dd><input type="time" value="${meal.dateTime}" name="timeEnd"></dd>
     </dl>
     <button type="submit">Фильтровать</button>
     <button onclick='window.location.href="meals"' type="button">Отменить</button>

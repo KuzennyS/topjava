@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,8 +43,7 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public List<MealTo> getAllbyUser(Integer userId) {
-        return MealsUtil.getWithExcess(repositoryMeal.getAllbyUser(userId), MealsUtil.DEFAULT_CALORIES_PER_DAY).stream()
-                .sorted(Comparator.comparing(MealTo::getDateTime).reversed()).collect(Collectors.toList());
+        return MealsUtil.getWithExcess(repositoryMeal.getAllbyUser(userId), MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
     @Override
@@ -55,7 +54,9 @@ public class MealServiceImpl implements MealService {
     @Override
     public List<MealTo> getFilterDT(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, Integer userId) {
         return MealsUtil.getWithExcess(
-                repositoryMeal.getFilterDT(startDate, startTime, endDate, endTime, userId),MealsUtil.DEFAULT_CALORIES_PER_DAY);
-
+                repositoryMeal.getFilterDT(startDate, startTime, endDate, endTime, userId), MealsUtil.DEFAULT_CALORIES_PER_DAY).stream()
+                .filter(mealTo -> DateTimeUtil.isBetweenDate(
+                        mealTo.getDateTime().toLocalTime(), startTime, endTime))
+                .collect(Collectors.toList());
     }
 }

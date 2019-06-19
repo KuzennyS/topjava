@@ -39,7 +39,17 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
-        try {
+        String action = request.getParameter("action");
+
+        if (action == null) {
+            Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+                    LocalDateTime.parse(request.getParameter("dateTime")),
+                    request.getParameter("description"),
+                    Integer.parseInt(request.getParameter("calories")));
+            log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
+            mealRestController.create(meal);
+            response.sendRedirect("meals");
+        } else if (action.equals("filterDT")) {
             request.setAttribute("meals", mealRestController.getFilterDT(
                     LocalDate.parse(request.getParameter("dateStart"), DATE_FORMATTER),
                     LocalTime.parse(request.getParameter("timeStart"), TIME_FORMATTER),
@@ -47,14 +57,6 @@ public class MealServlet extends HttpServlet {
                     LocalTime.parse(request.getParameter("timeEnd"), TIME_FORMATTER)));
             log.info("getAllwithFilterD");
             request.getRequestDispatcher("/meals.jsp").forward(request, response);
-        } catch (NullPointerException ex) {
-            Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                    LocalDateTime.parse(request.getParameter("dateTime")),
-                    request.getParameter("description"),
-                    Integer.parseInt(request.getParameter("calories")));
-            log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-            mealRestController.create(meal, SecurityUtil.authUserId());
-            response.sendRedirect("meals");
         }
     }
 
