@@ -8,7 +8,7 @@ public class DateTimeUtil {
     public static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public static <T extends Comparable<T>> boolean isBetweenDate(T lt, T startTime, T endTime) {
+    public static <T extends Comparable<T>> boolean isBetween(T lt, T startTime, T endTime) {
         return lt.compareTo(startTime) >= 0 && lt.compareTo(endTime) <= 0;
     }
 

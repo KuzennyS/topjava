@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
@@ -28,9 +29,9 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal, Integer userId) {
-        Map<Integer, Meal> repository;
-        repository = repositoryG.get(userId) != null ? repositoryG.get(userId) : new ConcurrentHashMap<>();
-//        repositoryG.computeIfAbsent(userId, k -> new ConcurrentHashMap<>()).put(meal.getId(), meal);
+//        Map<Integer, Meal> repository;
+//        repository = repositoryG.get(userId) != null ? repositoryG.get(userId) : new ConcurrentHashMap<>();
+        Map<Integer, Meal> repository = repositoryG.computeIfAbsent(userId, k -> new ConcurrentHashMap<>());
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);
@@ -61,15 +62,19 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     public List<Meal> getAllbyUser(Integer userId) {
         Map<Integer, Meal> repository = repositoryG.get(userId);
         if (repository == null) return new ArrayList<>();
-        return repository.values().stream()
-                .sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
+        return sortedMeal(repository.values().stream());
     }
 
     @Override
     public List<Meal> getFilterDT(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, Integer userId) {
-        return repositoryG.get(userId).values().stream()
-                .filter(meal -> DateTimeUtil.isBetweenDate(
-                        meal.getDateTime().toLocalDate(), startDate, endDate))
+        if (startDate == null || endDate == null) return new ArrayList<>();
+        return sortedMeal(repositoryG.get(userId).values().stream()
+                .filter(meal -> DateTimeUtil.isBetween(
+                        meal.getDateTime().toLocalDate(), startDate, endDate)));
+    }
+
+    private static List<Meal> sortedMeal(Stream<Meal> repository){
+        return repository
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed()).collect(Collectors.toList());
     }
 }

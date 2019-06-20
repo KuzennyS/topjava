@@ -32,8 +32,8 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public void delete(int id, Integer userId) throws NotFoundException {
-        checkNotFoundWithId(repositoryMeal.delete(id, userId), id);
+    public void delete(int id, Integer userId){
+        repositoryMeal.delete(id, userId);
     }
 
     @Override
@@ -53,10 +53,7 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public List<MealTo> getFilterDT(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, Integer userId) {
-        return MealsUtil.getWithExcess(
-                repositoryMeal.getFilterDT(startDate, startTime, endDate, endTime, userId), MealsUtil.DEFAULT_CALORIES_PER_DAY).stream()
-                .filter(mealTo -> DateTimeUtil.isBetweenDate(
-                        mealTo.getDateTime().toLocalTime(), startTime, endTime))
-                .collect(Collectors.toList());
+        return MealsUtil.getFilteredWithExcess(repositoryMeal.getFilterDT(startDate, startTime, endDate, endTime, userId),
+                MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
     }
 }
