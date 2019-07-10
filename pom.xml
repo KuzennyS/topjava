@@ -26,7 +26,6 @@
 
         <!--DB-->
         <postgresql.version>42.2.6</postgresql.version>
-
         <!--    Tests  -->
         <junit.version>4.12</junit.version>
 
@@ -125,7 +124,7 @@
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-<!--            <scope>runtime</scope>-->
+            <!--            <scope>runtime</scope>-->
             <version>${ehcache.version}</version>
         </dependency>
 
