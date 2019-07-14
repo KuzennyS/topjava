@@ -1,9 +1,14 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -19,19 +24,29 @@ import static ru.javawebinar.topjava.UserTestData.*;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
+    List<User> allReserve;
+
     @Autowired
     protected UserService service;
 
     @Autowired
+    private Environment environment;
+
+    @Autowired(required = false)
     private CacheManager cacheManager;
 
-    @Autowired
+    @Autowired(required = false)
     protected JpaUtil jpaUtil;
 
     @Before
     public void setUp() throws Exception {
-        cacheManager.getCache("users").clear();
-        jpaUtil.clear2ndLevelHibernateCache();
+        if (!isJDBC()) {
+            cacheManager.getCache("users").clear();
+            jpaUtil.clear2ndLevelHibernateCache();
+        }
+        else {
+            allReserve = service.getAll();
+        }
     }
 
     @Test
@@ -86,12 +101,22 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void getAll() throws Exception {
+        if (isJDBC()) allReserve.forEach(user -> service.update(user));
         List<User> all = service.getAll();
         assertMatch(all, ADMIN, USER);
     }
 
+    private boolean isJDBC() {
+        boolean jdbc = false;
+        for(String profile : environment.getActiveProfiles()){
+            if ("jdbc".equalsIgnoreCase(profile)) jdbc = true;
+        }
+        return jdbc;
+    }
+
     @Test
     public void testValidation() throws Exception {
+        Assume.assumeFalse(isJDBC());
         validateRootCause(() -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);
