@@ -1,5 +1,5 @@
 package ru.javawebinar.topjava.web.meal;
-
+/*@Controller
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ import java.util.Objects;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
-@Controller
+
 @RequestMapping(value = "/meals")
 public class JspMealController extends AbstractMealController {
 
@@ -67,4 +67,4 @@ public class JspMealController extends AbstractMealController {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.valueOf(paramId);
     }
-}
+}*/
